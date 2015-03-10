@@ -19,20 +19,31 @@ public class ChatClient {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
     
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         // TODO code application logic here
-        String ipdest;
+        String ipdest, username;
         int portdest;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in) {});
         Socket sock;
         
-        System.out.println("masukkan IP tujuan");
-        ipdest = br.readLine();
-        System.out.println("masukkan port tujuan");
-        portdest = Integer.parseInt( br.readLine());
+        findServer find = new findServer();
+        find.setVisible(true);
         
+        boolean tmp;
+        int i = 0;
+        while (true)
+        {
+            tmp = find.getReady();
+            if (tmp == true) break;
+            i++;
+            if (i>50) i=0;
+        }
+        ipdest = find.getIpDest();
+        portdest = find.getPortDest();
+        username = find.getUsername();
         Connection conn = new Connection(ipdest, portdest);
         conn.startConnection();
         sock = conn.getSocket();
@@ -52,6 +63,7 @@ public class ChatClient {
         sockr.setChatWindow(win);
         sockr.setChatModel(chatMsg);
         sockr.start();
+        sockw.write("100:user:"+username);
     }
     
 }
