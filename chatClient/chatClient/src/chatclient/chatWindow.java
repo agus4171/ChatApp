@@ -1,6 +1,5 @@
 package chatclient;
 import java.io.*;
-import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -164,15 +163,25 @@ public class chatWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_newMsgActionPerformed
 
     /**
-     * @param args the command line arguments
-     * @throws java.io.IOException
+     * @param chatMsg
      */
-    public static void main(String args[]) throws IOException {
+    public void setChatModel(DefaultListModel chatMsg)
+    {
+        this.chatBox.setModel(chatMsg);
+    }
+    
+    public void setFriendsModel(DefaultListModel friends)
+    {
+        this.friendList.setModel(friends);
+    }
+    
+   // public static void main(String args[]) throws IOException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
+        /*
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -184,58 +193,6 @@ public class chatWindow extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(chatWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        String ipdest;
-        int portdest;
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in) {});
-        Socket sock;
-        
-        System.out.println("masukkan IP tujuan");
-        ipdest = br.readLine();
-        System.out.println("masukkan port tujuan");
-        portdest = Integer.parseInt( br.readLine());
-        
-        Connection conn = new Connection(ipdest, portdest);
-        conn.startConnection();
-        sock = conn.getSocket();
-        Writer sockw = new Writer(sock);
-        Reader sockr = new Reader(sock);
-        
-        //BufferedReader sockbr = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-        //BufferedWriter sockbw = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
-        String msg;
-        /*msg = sockbr.readLine();
-        System.out.println(msg);
-        */int i = 0;
-        /*while(i < 5)
-        {
-            
-            /*msg = br.readLine();
-            sockbw.write(msg);
-            sockbw.newLine();
-            sockbw.flush();
-            msg = sockbr.readLine();
-            System.out.println(msg);
-            msg = br.readLine();
-            sockw.write(msg);
-            i++;
-            
-        }
-        */
-        chatWindow win = new chatWindow();    
-        win.setVisible(true);
-        DefaultListModel chatMsg = new DefaultListModel();
-        DefaultListModel friends = new DefaultListModel();
-        win.chatBox.setModel(chatMsg);
-        win.friendList.setModel(friends);
-        win.setReader(sockr);
-        win.setWriter(sockw);
-        chatMsg.removeAllElements();
-        friends.removeAllElements();
-        sockr.setChatWindow(win);
-        sockr.setChatModel(chatMsg);
-        sockr.start();
-        
-        
         /* Create and display the form *//*
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -243,7 +200,7 @@ public class chatWindow extends javax.swing.JFrame {
                 win.setVisible(true);
             }
         });*/
-    }
+   // }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_send;
