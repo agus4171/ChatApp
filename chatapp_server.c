@@ -9,6 +9,9 @@
 #define PORT 8888
 
 void *connection_handler(void *);
+int max_client=30, temp_socket[30];
+int n=0;
+char temp_user[][30];
 
 int main(int argc, char *argv[])
 {
@@ -107,8 +110,23 @@ void *connection_handler(void *socket_desc)
 
     while( (read_size = recv(sock, client_message, 2000, 0)) >0 )
     {
-        write(sock, client_message, strlen(client_message));
+        //write(sock, client_message, strlen(client_message));
+    client_message[read_size] = '\0';
+    
+    printf("pesan dari client %d : %s\n", sock, client_message);
+    
+    if(strcmp(client_message,"100::",5)==0){
+    	if(strcmp(client_message+5,"user::",6)==0){
+    		strcpy(temp_user[n],client_message+11);
+    		n++;
+    	}
     }
+    
+    for (i=0; i<max_client;i++){
+    	printf("%s",temp_user[i]);
+    }
+	
+	}
 
     if(read_size == 0)
     {
