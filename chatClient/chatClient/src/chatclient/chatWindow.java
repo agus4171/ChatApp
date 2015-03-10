@@ -144,6 +144,7 @@ public class chatWindow extends javax.swing.JFrame {
             // TODO add your handling code here:
             //System.out.println(newMsg.getText());
             sockw.write(newMsg.getText());
+            newMsg.setText(null);
         } catch (IOException ex) {
             Logger.getLogger(chatWindow.class.getName()).log(Level.SEVERE, null, ex);
         }

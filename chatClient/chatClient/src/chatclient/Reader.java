@@ -21,7 +21,6 @@ public class Reader extends Thread{
     private Socket sock;
     private BufferedReader br;
     private String msg;
-    private chatWindow win;
     private DefaultListModel chatMsg;
     private DefaultListModel friends;
             
@@ -30,12 +29,7 @@ public class Reader extends Thread{
         this.sock = sock;
         br = new BufferedReader(new InputStreamReader(sock.getInputStream()));
     }
-    
-    public void setChatWindow(chatWindow win)
-    {
-        this.win = win;
-    }
-    
+        
     public void setChatModel(DefaultListModel chatMsg)
     {
         this.chatMsg = chatMsg;

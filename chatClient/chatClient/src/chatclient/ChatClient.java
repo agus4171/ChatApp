@@ -20,18 +20,25 @@ public class ChatClient {
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
+     * @throws java.lang.InterruptedException
      */
     
     public static void main(String[] args) throws IOException, InterruptedException {
-        // TODO code application logic here
         String ipdest, username;
         int portdest;
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in) {});
         Socket sock;
+        /*
+        String inp;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        inp = br.readLine();
+        String[] part = inp.split("::");
+        for (String part1 : part) {
+            System.out.println(part1);
+        }
         
+        /* collecting chat server and initial information */
         findServer find = new findServer();
         find.setVisible(true);
-        
         boolean tmp;
         int i = 0;
         while (true)
@@ -41,15 +48,20 @@ public class ChatClient {
             i++;
             if (i>50) i=0;
         }
+        
+        /* connecting to chat server */
         ipdest = find.getIpDest();
         portdest = find.getPortDest();
         username = find.getUsername();
         Connection conn = new Connection(ipdest, portdest);
         conn.startConnection();
         sock = conn.getSocket();
+        
+        /* summoning writer and reader, only once */
         Writer sockw = new Writer(sock);
         Reader sockr = new Reader(sock);
         
+        /* summoning chat room */
         chatWindow win = new chatWindow();    
         win.setVisible(true);
         DefaultListModel chatMsg = new DefaultListModel();
@@ -60,10 +72,14 @@ public class ChatClient {
         win.setWriter(sockw);
         chatMsg.removeAllElements();
         friends.removeAllElements();
-        sockr.setChatWindow(win);
+        
+        /* setting up reader component */
         sockr.setChatModel(chatMsg);
+        
+        /* waking up reader thread */
         sockr.start();
-        sockw.write("100:user:"+username);
+        
+        /* doing first authentication */
+        sockw.write("100::user::"+username);
     }
-    
 }
