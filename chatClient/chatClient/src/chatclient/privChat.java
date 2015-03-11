@@ -15,6 +15,7 @@ import javax.swing.DefaultListModel;
  * @author kromatin
  */
 public class privChat extends javax.swing.JFrame {
+    private String username;
     private Reader sockr;
     private Writer sockw;
     /**
@@ -23,7 +24,12 @@ public class privChat extends javax.swing.JFrame {
     public privChat() {
         initComponents();
     }
-
+    
+    public void setUsername(String username)
+    {
+        this.username = username;
+    }
+    
     public void setReader(Reader sockr)
     {
         this.sockr = sockr;

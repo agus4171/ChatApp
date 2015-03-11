@@ -13,6 +13,7 @@ import javax.swing.DefaultListModel;
  * @author kromatin
  */
 public class chatWindow extends javax.swing.JFrame {
+    private String username;
     private Reader sockr;
     private Writer sockw;
     /**
@@ -20,6 +21,11 @@ public class chatWindow extends javax.swing.JFrame {
      */
     public chatWindow() {
         initComponents();
+    }
+    
+    public void setUsername(String username)
+    {
+        this.username = username;
     }
     
     public void setReader(Reader sockr)
@@ -153,7 +159,8 @@ public class chatWindow extends javax.swing.JFrame {
     private void newMsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMsgActionPerformed
         try {
             // TODO add your handling code here:
-            sockw.write(newMsg.getText());
+            sockw.write("101::all::pesan::"+newMsg.getText());
+            System.out.println("send: 101::"+username+"::all::pesan::"+newMsg.getText());
             newMsg.setText(null);
         } catch (IOException ex) {
             Logger.getLogger(chatWindow.class.getName()).log(Level.SEVERE, null, ex);

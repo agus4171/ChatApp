@@ -66,6 +66,7 @@ public class ChatClient {
         win.setVisible(true);
         DefaultListModel chatMsg = new DefaultListModel();
         DefaultListModel friends = new DefaultListModel();
+        win.setUsername(username);
         win.setChatModel(chatMsg);
         win.setFriendsModel(friends);
         win.setReader(sockr);
