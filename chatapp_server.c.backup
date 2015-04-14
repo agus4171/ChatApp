@@ -9,7 +9,8 @@
 #define PORT 8888
 
 void *connection_handler(void *);
-int max_client = 30, temp_socket[30], n;
+int max_client=30, temp_socket[30];
+int n=0;
 char temp_user[][30];
 
 int main(int argc, char *argv[])
@@ -112,11 +113,10 @@ void *connection_handler(void *socket_desc)
                 n++;
                 write(sock, client_message+11, strlen(client_message));
             }
-            printf("nama : %s", client_message+11);
         }
 
         //printf("masuk ke 101\n");
-        else if (strncmp(client_message, "101::", 5) == 0)
+        else if(strncmp(client_message, "101::", 5) == 0)
         {
             if(strncmp(client_message+5, "all::", 6) == 0)
             {
@@ -130,10 +130,8 @@ void *connection_handler(void *socket_desc)
                 }
             }
         }
-        else
-        {
-            printf("tidak masuk kemana - mana");
-        }
+
+
     }
 
     if(read_size == 0)
