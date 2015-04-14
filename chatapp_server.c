@@ -6,16 +6,20 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define PORT 8888
+#define PORT 9999
 
 void *connection_handler(void *);
-<<<<<<< HEAD
-int max_client = 30, temp_socket[30], n;
-=======
-int max_client=30, temp_socket[30];
-int n=0;
->>>>>>> de205eeff892878c4d11d3fb938d3f675f1e3fd9
-char temp_user[][30];
+
+struct list_user
+{
+    int sock;
+    char nama_user[100];
+    struct list_user * next;
+};
+
+typedef struct list_user user;
+
+user * active, * head, * tmp;
 
 int main(int argc, char *argv[])
 {
@@ -23,6 +27,7 @@ int main(int argc, char *argv[])
 	struct sockaddr_in server, client;
 	//char client_message[2000];
 
+    head = NULL;
 	socket_desc = socket(AF_INET, SOCK_STREAM, 0);
 
 	//membuat socket
@@ -50,18 +55,24 @@ int main(int argc, char *argv[])
 	//menunggu koneksi dari client
 	printf("Waiting for incoming connections\n");
 	c = sizeof(struct sockaddr_in);
-	printf("sizeof sockaddr_in : %d", c);
 
 	//menerima koneksi dari client
 	while( (client_socket = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) )
 	{
-        printf("client_sock : %d socket_desc : %d\n", client_socket, socket_desc);
+        //printf("client_sock : %d socket_desc : %d\n", client_socket, socket_desc);
         printf("Connection accepted\n");
 
-        printf("1-- > ip client : %s port : %d\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
+        //printf("1-- > ip client : %s port : %d\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
         pthread_t sniffer_thread;
+        pthread_t list_user;
         new_sock = malloc(1);
         *new_sock = client_socket;
+
+        active = (user *)malloc(sizeof(user));
+        active->next = head;
+        active->sock = client_socket;
+        //strcpy(active->nama_user, "");
+        head = active;
 
         if(pthread_create( &sniffer_thread, NULL, connection_handler, (void*) new_sock) < 0)
         {
@@ -83,86 +94,121 @@ int main(int argc, char *argv[])
 void *connection_handler(void *socket_desc)
 {
     //membuat socket decriptor
-    int i, sock = *(int*)socket_desc;
-    for(i=0; i < max_client; i++)
-        {
-            if(temp_socket[i] == 0)
-            {
-                temp_socket[i] = sock;
-                printf("Menambahkan socket ke : %d -->temp_socket || socket_client : %d\n", i, sock);
-                break;
-            }
-        }
+    int sock = *(int*)socket_desc;
     int read_size;
-    char *message, client_message[2000], temp_message[2000];
+    int i = 0;
+    char *message, client_message[2000], temp_message[2000], msg[2000], body_msg[2000], user[100], user_tujuan[100];
+
+    active = head;
+    read_size = read(sock, client_message, 2000);
+    active = head;
+
+    while(active)
+    {
+        if(active->sock == sock)
+        {
+            client_message[read_size] = '\0';
+            strtok(client_message,"\r\n");
+            strcpy(active->nama_user,client_message);
+            strcpy(user, client_message);
+        }
+        active = active->next;
+    }
 
     //mengirimkan pesan ke client bahwa dia sudah berhasil terhubung dengan server
-    message = "Selamat, saya sudah menghandel koneksi Anda\n";
+    message = "Selamat datang di Secure Chat\n";
     write(sock, message, strlen(message));
 
+    int flag_receive = 0;
+    int active_user = 0;
     //printf("2-->ip client : %s port : %d\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
-    while((read_size = recv(sock, client_message, 2000, 0)) > 0)
+    while(read_size = recv(sock, client_message, 2000, 0))
     {
-<<<<<<< HEAD
         client_message[read_size] = '\0';
-        //write(sock, client_message, strlen(client_message));
+        strtok(client_message, "\r\n");
 
-        printf("pesan dari client %d : %s\n", sock, client_message);
-        const char delimiter[2] = "::";
-        //const char *sandi;
-        if(strncmp(client_message,"100::", 5) == 0)
+        active = head;
+        char list[2000];
+        strcpy(list, ";");
+        while(active)
         {
-            if(strncmp(client_message+5,"user::", 6) == 0)
-            {
-                strcpy(temp_user[n], client_message+11);
-                n++;
-                write(sock, client_message+11, strlen(client_message));
-            }
-            printf("nama : %s", client_message+11);
+            strcat(list, active->nama_user);
+            strcat(list, ";");
+            active = active->next;
+        }
+        flag_receive = 0;
+        printf("ini list %s \n", list);
+        send(sock, list, strlen(list), 0);
+        send(sock, "\r\n", strlen("\r\n"), 0);
+
+        if(client_message[0] == ':')
+        {
+            printf("masuk ke titik 2\n");
+            strcpy(user_tujuan, strtok(client_message, ":"));
+            strcpy(body_msg, strtok(NULL, ":"));
+            //printf("body_msg %s \n", body_msg);
+            printf("user_tujuan %s ", user_tujuan);
+            flag_receive = 1;
         }
 
-        //printf("masuk ke 101\n");
-        else if (strncmp(client_message, "101::", 5) == 0)
-        {
-            if(strncmp(client_message+5, "all::", 6) == 0)
-            {
-                if(strncmp(client_message+6, "pesan::", 7) == 0)
-                {
-                    for(i=0; i<max_client; i++)
-                    {
-                        printf("nama : %s || soocket : %d", temp_user[i], temp_socket[i]);
-                        write(temp_socket[i], client_message+18, strlen(client_message));
-                    }
-                }
-            }
-        }
         else
         {
-            printf("tidak masuk kemana - mana");
+            flag_receive = 2;
+            strcpy(body_msg, client_message);
         }
-=======
-        //write(sock, client_message, strlen(client_message));
-    client_message[read_size] = '\0';
-    
-    printf("pesan dari client %d : %s\n", sock, client_message);
-    
-    if(strcmp(client_message,"100::",5)==0){
-    	if(strcmp(client_message+5,"user::",6)==0){
-    		strcpy(temp_user[n],client_message+11);
-    		n++;
-    	}
->>>>>>> de205eeff892878c4d11d3fb938d3f675f1e3fd9
-    }
-    
-    for (i=0; i<max_client;i++){
-    	printf("%s",temp_user[i]);
-    }
-	
+
+        if(flag_receive == 1)
+        {
+			active = head;
+			while(active)
+			{
+				if(strcmp(user_tujuan, active->nama_user) == 0)
+				{
+					active_user = active->sock;
+					printf("user %s dan body_msg %s ", user, body_msg);
+					sprintf(msg,"%s: %s\r\n",user, body_msg);
+					printf("msg is %s", msg);
+					send(active_user , msg , strlen(msg),0);
+					send(active_user , "\r\n" , strlen("\r\n"),0);
+
+				}
+				active = active->next;
+			}
+		}
+		else if(flag_receive==2)
+		{
+			sprintf(msg,"%s: %s\r\n",user,body_msg);
+			write(active_user , msg , strlen(msg));
+		}
+
+		strcpy(client_message,"");
+
 	}
 
     if(read_size == 0)
     {
         printf("Client disconnect\n");
+        active = head;
+		while(active)
+		{
+			if(active->sock == sock)
+			{
+				tmp = active;
+				head = active->next;
+				free(tmp);
+				break;
+			}
+			else if(active->next!=NULL && active->next->sock==sock)
+			{
+				tmp = active->next;
+				active->next = active->next->next;
+				free(tmp);
+				break;
+			}
+
+			printf("%d\n", active->sock);
+			active = active->next;
+		}
         fflush(stdout);
     }
     else if(read_size == -1)
