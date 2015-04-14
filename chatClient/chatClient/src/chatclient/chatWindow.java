@@ -159,8 +159,8 @@ public class chatWindow extends javax.swing.JFrame {
     private void newMsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMsgActionPerformed
         try {
             // TODO add your handling code here:
-            sockw.write("101::all::pesan::"+newMsg.getText());
-            System.out.println("send: 101::"+username+"::all::pesan::"+newMsg.getText());
+            sockw.write(newMsg.getText());
+            System.out.println(username+" : "+newMsg.getText());
             newMsg.setText(null);
         } catch (IOException ex) {
             Logger.getLogger(chatWindow.class.getName()).log(Level.SEVERE, null, ex);

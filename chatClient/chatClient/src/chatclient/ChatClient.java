@@ -81,6 +81,6 @@ public class ChatClient {
         sockr.start();
         
         /* doing first authentication */
-        sockw.write("100::user::"+username);
+        sockw.write(username);
     }
 }
