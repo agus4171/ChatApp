@@ -46,6 +46,17 @@ public class Reader extends Thread{
         while(true){
             try {
                 msg = br.readLine();
+                if (msg.charAt(0) == ';')
+                {
+                    System.out.println("get the user list");
+                    System.out.println(msg.charAt(0));
+                    String[] tmp = msg.split(";");
+                    for (int i = 0; i < tmp.length; i++)
+                    {
+                        friends.addElement(tmp[i]);
+                    }
+                    
+                }
             } catch (IOException ex) {
                 Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
             }

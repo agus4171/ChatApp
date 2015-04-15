@@ -76,11 +76,13 @@ public class ChatClient {
         
         /* setting up reader component */
         sockr.setChatModel(chatMsg);
+        sockr.setFriendModel(friends);
         
         /* waking up reader thread */
         sockr.start();
         
         /* doing first authentication */
         sockw.write(username);
+        sockw.write("\r\n");
     }
 }
