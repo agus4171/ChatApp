@@ -59,7 +59,7 @@ public class ChatClient {
         
         /* summoning writer and reader, only once */
         Writer sockw = new Writer(sock);
-        Reader sockr = new Reader(sock);
+        Reader sockr = new Reader(sock, username);
         
         /* summoning chat room */
         chatWindow win = new chatWindow();    
