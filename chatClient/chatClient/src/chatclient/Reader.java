@@ -51,17 +51,22 @@ public class Reader extends Thread{
                     System.out.println("get the user list");
                     System.out.println(msg.charAt(0));
                     String[] tmp = msg.split(";");
+                    friends.clear();
                     for (int i = 0; i < tmp.length; i++)
                     {
                         friends.addElement(tmp[i]);
                     }
                     
                 }
+                else
+                {
+                    System.out.println(msg);
+                    chatMsg.addElement(msg);
+                }
             } catch (IOException ex) {
                 Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println(msg);
-            chatMsg.addElement(msg);
+            
         }
     }
 }

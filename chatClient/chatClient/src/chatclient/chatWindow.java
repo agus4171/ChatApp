@@ -26,6 +26,7 @@ public class chatWindow extends javax.swing.JFrame {
     public void setUsername(String username)
     {
         this.username = username;
+        thisuser.setText(username);
     }
     
     public void setReader(Reader sockr)
@@ -55,6 +56,8 @@ public class chatWindow extends javax.swing.JFrame {
         friendListPane = new javax.swing.JScrollPane();
         friendList = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        thisuser = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -115,6 +118,10 @@ public class chatWindow extends javax.swing.JFrame {
 
         jLabel1.setText("Friend List:");
 
+        jLabel2.setText("User anda:");
+
+        thisuser.setText("jLabel3");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -125,7 +132,11 @@ public class chatWindow extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(friendListPane, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(friendListPane, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(thisuser)))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -137,7 +148,11 @@ public class chatWindow extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addGap(10, 10, 10)
                         .addComponent(friendListPane, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 52, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(thisuser))
+                        .addGap(0, 16, Short.MAX_VALUE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -214,7 +229,9 @@ public class chatWindow extends javax.swing.JFrame {
     private javax.swing.JList friendList;
     private javax.swing.JScrollPane friendListPane;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField newMsg;
+    private javax.swing.JLabel thisuser;
     // End of variables declaration//GEN-END:variables
 }
