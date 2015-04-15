@@ -46,6 +46,9 @@ public class Reader extends Thread{
         while(true){
             try {
                 msg = br.readLine();
+                System.out.println(msg);
+                if (msg.length() != 0)
+                {
                 if (msg.charAt(0) == ';')
                 {
                     System.out.println("get the user list");
@@ -62,6 +65,7 @@ public class Reader extends Thread{
                 {
                     System.out.println(msg);
                     chatMsg.addElement(msg);
+                }
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
